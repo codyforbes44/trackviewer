@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, Plus, Copy, Trash2, ToggleLeft, ToggleRight, Clock, Map, QrCode, Pencil, Check, X, MoreVertical, RefreshCw, CreditCard, Loader2, Sparkles } from 'lucide-react';
+import { MapPin, Plus, Copy, Trash2, ToggleLeft, ToggleRight, Clock, Map, QrCode, Pencil, Check, X, MoreVertical, RefreshCw, CreditCard, Loader2, Sparkles, Mountain } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { usePullToRefresh } from '@/hooks/usePullToRefresh';
 import { PullToRefreshIndicator, PullToRefreshContainer } from '@/components/PullToRefresh';
@@ -185,6 +185,12 @@ const Dashboard = () => {
                 >
                   <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
                 </Button>
+                <Link to="/site-survey">
+                  <Button variant="outline" className="gap-2 shadow-card">
+                    <Mountain className="w-4 h-4" />
+                    Site Survey
+                  </Button>
+                </Link>
                 <Button onClick={handleCreateTracker} className="gap-2 shadow-card">
                   <Plus className="w-4 h-4" />
                   New Tracker
