@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { MapPin, ChevronDown } from "lucide-react";
+import { MapPin, ChevronDown, Mountain } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import VideoBackground from "@/components/VideoBackground";
@@ -47,7 +47,8 @@ const MapMockup = () => (
 const trustItems = [
   "No credit card required",
   "Free forever for personal use",
-  "Setup in 30 seconds",
+  "No app install for trackers",
+  "3D terrain on any address",
 ];
 
 const HeroSection = () => {
@@ -69,7 +70,7 @@ const HeroSection = () => {
               style={{ animationDelay: "0ms" }}
             >
               <MapPin className="w-4 h-4" aria-hidden="true" />
-              Real-Time Location Tracking
+              Real-Time Tracking · 3D Site Survey
             </div>
 
             <h1
@@ -77,9 +78,9 @@ const HeroSection = () => {
               className="text-4xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-[1.1] animate-[fadeInUp_0.5s_ease-out_both]"
               style={{ animationDelay: "100ms" }}
             >
-              Track Any Device,{" "}
+              Track Anything.{" "}
               <span className="text-transparent bg-clip-text bg-gradient-primary">
-                Anywhere
+                Know Anywhere.
               </span>
             </h1>
 
@@ -88,8 +89,9 @@ const HeroSection = () => {
               className="text-base sm:text-lg text-muted-foreground max-w-lg mx-auto lg:mx-0 leading-relaxed animate-[fadeInUp_0.5s_ease-out_both]"
               style={{ animationDelay: "200ms" }}
             >
-              Generate a unique link, share it, and monitor GPS location in
-              real-time on an interactive map. No app install required.
+              Generate shareable tracking links for live GPS — then dig deeper
+              with a 3D site survey: terrain, elevation, slope, contour lines,
+              sun path and live weather for any address on Earth.
             </p>
 
             <div
@@ -102,18 +104,19 @@ const HeroSection = () => {
                   className="gap-2 text-base px-8 shadow-elevated w-full sm:w-auto h-12"
                 >
                   <MapPin className="w-5 h-5" aria-hidden="true" />
-                  Start Tracking Free
+                  Start Free
                 </Button>
               </Link>
-              <a href="#how-it-works" className="w-full sm:w-auto">
+              <Link to={user ? "/site-survey" : "/auth"} className="w-full sm:w-auto">
                 <Button
                   size="lg"
                   variant="ghost"
                   className="gap-2 text-base px-8 w-full sm:w-auto h-12 border border-border/50"
                 >
-                  See How It Works
+                  <Mountain className="w-5 h-5" aria-hidden="true" />
+                  Open Site Survey
                 </Button>
-              </a>
+              </Link>
             </div>
 
             <div
