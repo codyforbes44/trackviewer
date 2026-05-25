@@ -1,21 +1,26 @@
-import { Globe, Lock, Zap } from "lucide-react";
+import { Globe, Lock, Zap, Mountain } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const props = [
   {
     icon: Zap,
     title: "Instant Setup",
-    description: "Generate a tracking link in seconds — no app installs, no sign-up required for viewers.",
+    description: "Generate a tracking link or open a site in seconds. No app installs, no sign-up required for viewers.",
+  },
+  {
+    icon: Mountain,
+    title: "Terrain Intelligence",
+    description: "Elevation, slope, aspect, contour lines, hillshade and live sun path for any address on the planet.",
   },
   {
     icon: Globe,
     title: "Works Everywhere",
-    description: "Any device with a browser can share or view a location. Cross-platform by default.",
+    description: "Any device with a browser can share, view or survey a location. Cross-platform by default.",
   },
   {
     icon: Lock,
     title: "Privacy-First",
-    description: "Tracking only happens with explicit consent. You control when sharing starts and stops.",
+    description: "Tracking only happens with explicit consent. You own the data, control sharing, and can delete instantly.",
   },
 ];
 
@@ -34,7 +39,7 @@ const ValuePropBanner = () => {
         <h2 className="text-xl sm:text-2xl font-semibold text-center text-foreground mb-10">
           Why MapMe.Live?
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
           {props.map((p, i) => (
             <div
               key={p.title}

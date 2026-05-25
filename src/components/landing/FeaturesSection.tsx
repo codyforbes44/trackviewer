@@ -1,4 +1,4 @@
-import { Check, Link2, Map, Shield } from "lucide-react";
+import { Check, Link2, Map, Shield, Mountain } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import VideoBackground from "@/components/VideoBackground";
 
@@ -111,6 +111,52 @@ const features = [
       </div>
     ),
   },
+  {
+    icon: Mountain,
+    title: "3D Site Survey",
+    description:
+      "Type any address and instantly see 3D terrain, elevation, slope, aspect, contour lines, sun path and live weather — built for planners, builders, and outdoor pros.",
+    bullets: [
+      "Satellite, terrain, hillshade & contours",
+      "Live elevation, slope % and compass aspect",
+      "Sun position, sunrise/sunset, day length",
+    ],
+    mockup: (
+      <div className="bg-secondary/60 rounded-xl border border-border/50 overflow-hidden aspect-video relative">
+        {/* Terrain gradient + contour lines */}
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-900/40 via-emerald-800/30 to-emerald-950/50" />
+        <svg className="absolute inset-0 w-full h-full" viewBox="0 0 200 120" fill="none">
+          {[15, 30, 45, 60, 75, 90, 105].map((y, i) => (
+            <path
+              key={i}
+              d={`M0 ${y} Q 50 ${y - 8 + i} 100 ${y + 4 - i} T 200 ${y + 2}`}
+              stroke="hsl(var(--primary))"
+              strokeOpacity={0.45}
+              strokeWidth="0.6"
+              fill="none"
+            />
+          ))}
+        </svg>
+        {/* Pin */}
+        <div className="absolute top-[42%] left-[58%] w-3 h-3 rounded-full bg-primary shadow-[0_0_12px_hsl(var(--primary)/0.6)] border-2 border-primary-foreground">
+          <div className="absolute -inset-2 rounded-full bg-primary/30 animate-ping" />
+        </div>
+        {/* Readout */}
+        <div className="absolute bottom-3 left-3 right-3 flex flex-wrap gap-1.5">
+          {[
+            { k: "Elev", v: "1,284 m" },
+            { k: "Slope", v: "8.2°" },
+            { k: "Aspect", v: "SW" },
+            { k: "Sun", v: "42° az 218°" },
+          ].map((s) => (
+            <span key={s.k} className="bg-card/85 backdrop-blur-sm rounded-md px-2 py-0.5 text-[10px] border border-border/50 text-foreground">
+              <span className="text-muted-foreground mr-1">{s.k}</span>{s.v}
+            </span>
+          ))}
+        </div>
+      </div>
+    ),
+  },
 ];
 
 const FeatureRow = ({
@@ -169,7 +215,7 @@ const FeaturesSection = () => (
         id="features-heading"
         className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-14"
       >
-        Everything You Need to Track
+        Everything You Need to Track &amp; Survey
       </h2>
       <div className="space-y-16 sm:space-y-24 max-w-5xl mx-auto">
         {features.map((f, i) => (

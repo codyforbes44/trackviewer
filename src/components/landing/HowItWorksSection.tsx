@@ -1,27 +1,25 @@
-import { UserPlus, Share2, Eye } from "lucide-react";
+import { useState } from "react";
+import { UserPlus, Share2, Eye, Search, Mountain, MapPin } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import VideoBackground from "@/components/VideoBackground";
 
-const steps = [
-  {
-    icon: UserPlus,
-    title: "Create an Account",
-    description: "Sign up for free in seconds with just your email.",
-  },
-  {
-    icon: Share2,
-    title: "Generate & Share a Link",
-    description: "Create a tracking link and share via text, email, or QR.",
-  },
-  {
-    icon: Eye,
-    title: "Monitor in Real-Time",
-    description: "View live GPS on an interactive map from your dashboard.",
-  },
-];
+const flows = {
+  tracking: [
+    { icon: UserPlus, title: "Create an Account", description: "Sign up for free in seconds with just your email." },
+    { icon: Share2, title: "Generate & Share a Link", description: "Create a tracking link and share via text, email, or QR." },
+    { icon: Eye, title: "Monitor in Real-Time", description: "View live GPS on an interactive map from your dashboard." },
+  ],
+  survey: [
+    { icon: Search, title: "Search an Address", description: "Type any address or coordinate — autocomplete finds it instantly." },
+    { icon: Mountain, title: "Inspect the Terrain", description: "Toggle 3D terrain, hillshade, contour lines and 3D buildings." },
+    { icon: MapPin, title: "Read the Site Data", description: "Elevation, slope, aspect, sun path and live weather, on demand." },
+  ],
+};
 
 const HowItWorksSection = () => {
   const { ref, isVisible } = useScrollAnimation();
+  const [mode, setMode] = useState<'tracking' | 'survey'>('tracking');
+  const steps = flows[mode];
 
   return (
     <section
@@ -41,6 +39,22 @@ const HowItWorksSection = () => {
         >
           How It Works
         </h2>
+
+        <div className="flex justify-center mb-12">
+          <div className="inline-flex gap-1 p-1 bg-muted rounded-xl">
+            {(['tracking', 'survey'] as const).map((m) => (
+              <button
+                key={m}
+                onClick={() => setMode(m)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  mode === m ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                {m === 'tracking' ? 'Live Tracking' : 'Site Survey'}
+              </button>
+            ))}
+          </div>
+        </div>
 
         <div className="relative max-w-4xl mx-auto">
           {/* Connecting dashed line (desktop) */}
