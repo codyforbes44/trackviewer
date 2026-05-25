@@ -17,7 +17,7 @@ const structuredData = {
       name: "MᴀᴘMᴇ.Lɪᴠᴇ",
       url: "https://mapme.live",
       logo: "https://mapme.live/og-image.png",
-      description: "Real-time location tracking and monitoring platform",
+      description: "Real-time GPS tracking and 3D site survey platform",
     },
     {
       "@type": "WebSite",
@@ -28,8 +28,17 @@ const structuredData = {
       "@type": "WebApplication",
       name: "MᴀᴘMᴇ.Lɪᴠᴇ",
       url: "https://mapme.live/",
-      applicationCategory: "UtilityApplication",
+      applicationCategory: ["UtilityApplication", "MapApplication"],
       operatingSystem: "Web Browser",
+      featureList: [
+        "Real-time GPS tracking links",
+        "Shareable tracking dashboards",
+        "3D terrain & elevation",
+        "Contour lines & hillshade",
+        "Slope and aspect analysis",
+        "Sun path & live weather",
+        "Satellite, terrain and street basemaps",
+      ],
       offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
     },
     {
@@ -40,7 +49,15 @@ const structuredData = {
           name: "How does MᴀᴘMᴇ.Lɪᴠᴇ work?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "MᴀᴘMᴇ.Lɪᴠᴇ generates a unique tracking link you can share with any device. When opened, the link requests location permission and sends real-time GPS coordinates to your dashboard.",
+            text: "MᴀᴘMᴇ.Lɪᴠᴇ generates shareable GPS tracking links and includes a 3D Site Survey that turns any address into a topographic map with elevation, slope, contour lines, sun path and live weather.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "What is the 3D Site Survey?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "A built-in tool that lets authenticated users search any address and inspect 3D terrain, elevation, slope, aspect, contour lines, hillshade, 3D buildings, sun position and live weather.",
           },
         },
         {
@@ -48,7 +65,7 @@ const structuredData = {
           name: "Is MᴀᴘMᴇ.Lɪᴠᴇ free to use?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Yes. MᴀᴘMᴇ.Lɪᴠᴇ is completely free for personal use.",
+            text: "Yes. The Free plan includes up to 5 trackers and full access to Site Survey at no cost. Pro adds unlimited trackers, longer history, geofence alerts and API access.",
           },
         },
       ],
@@ -66,9 +83,9 @@ const Home = () => {
   return (
     <>
       <SEO
-        title="MᴀᴘMᴇ.Lɪᴠᴇ - Real-Time Location Tracking & GPS Monitoring"
-        description="Generate unique tracking links and monitor device locations in real-time. Free location tracking with live map visualization and secure sharing."
-        keywords="location tracking, GPS tracking, real-time tracking, location sharing, device tracking, map tracking, live location"
+        title="MᴀᴘMᴇ.Lɪᴠᴇ — Real-Time GPS Tracking & 3D Site Survey"
+        description="Real-time GPS tracking links plus a 3D site survey for any address: terrain, elevation, slope, contour lines, sun path and live weather. Free for personal use."
+        keywords="GPS tracking, real-time location tracking, tracking link, site survey, terrain map, elevation, contour lines, slope analysis, sun path, hillshade, 3D map"
         canonical="https://mapme.live/"
         structuredData={structuredData}
       />

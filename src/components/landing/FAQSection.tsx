@@ -10,12 +10,22 @@ const faqItems = [
   {
     question: "How does MᴀᴘMᴇ.Lɪᴠᴇ work?",
     answer:
-      "MᴀᴘMᴇ.Lɪᴠᴇ generates a unique tracking link you can share with any device. When opened, the link requests location permission and sends real-time GPS coordinates to your dashboard, displayed on an interactive map.",
+      "MᴀᴘMᴇ.Lɪᴠᴇ does two things. Tracking: generate a unique link, share it with any device, and watch live GPS on your dashboard. Site Survey: type any address and instantly see 3D terrain, elevation, slope, contour lines, sun path and live weather.",
+  },
+  {
+    question: "What is the 3D Site Survey?",
+    answer:
+      "It's an authenticated tool on the dashboard that turns any address into a best-in-class topographic map. You get 5 base styles (satellite, terrain, streets, light, dark), 3D terrain with hillshade and contour lines, 3D buildings, elevation, slope, compass aspect, UTM coordinates, live sun position (altitude/azimuth, sunrise, solar noon, sunset, day length) and current weather.",
+  },
+  {
+    question: "Do I need an app for either feature?",
+    answer:
+      "No. Recipients of a tracking link just open it in their browser — the standard Geolocation API handles the rest. Site Survey runs entirely in your browser too, using Mapbox GL for hardware-accelerated 3D rendering.",
   },
   {
     question: "Is MᴀᴘMᴇ.Lɪᴠᴇ free to use?",
     answer:
-      "Yes. MᴀᴘMᴇ.Lɪᴠᴇ is completely free for personal use. Create an account, generate tracking links, and monitor locations at no cost.",
+      "Yes. The Free plan lets you create up to 5 trackers and use Site Survey at no cost. Pro unlocks unlimited trackers, longer history, geofence alerts, API access and CSV/JSON exports.",
   },
   {
     question: "Is my location data secure?",
@@ -26,11 +36,6 @@ const faqItems = [
     question: "What devices are supported?",
     answer:
       "Any device with a modern web browser and GPS capability — smartphones, tablets, and laptops on iOS, Android, Windows, macOS, and Linux.",
-  },
-  {
-    question: "Do tracked users need to install an app?",
-    answer:
-      "No. Tracked users simply open the shared link in their browser — no app download required. The browser's built-in Geolocation API handles everything.",
   },
 ];
 

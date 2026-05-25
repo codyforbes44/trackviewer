@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { MapPin, ExternalLink } from "lucide-react";
+import { MapPin, Mountain } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import VideoBackground from "@/components/VideoBackground";
@@ -16,14 +16,14 @@ const CTASection = () => {
 
       <div className="container mx-auto px-4 text-center max-w-3xl space-y-6 relative z-10">
         <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-foreground">
-          Start Tracking for Free —{" "}
+          Track Devices. Survey Sites.{" "}
           <span className="text-transparent bg-clip-text bg-gradient-primary">
-            No Limits
+            All in One Map.
           </span>
         </h2>
         <p className="text-base sm:text-lg text-muted-foreground max-w-xl mx-auto">
-          Create unlimited tracking links, monitor in real-time, and share
-          securely. Free forever for personal use.
+          Real-time GPS tracking links plus a 3D site survey for any address —
+          terrain, elevation, contours, sun path and weather. Free for personal use.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
           <Link to={user ? "/dashboard" : "/auth"}>
@@ -35,16 +35,16 @@ const CTASection = () => {
               {user ? "Go to Dashboard" : "Start Free"}
             </Button>
           </Link>
-          <a href="#how-it-works">
+          <Link to={user ? "/site-survey" : "/auth"}>
             <Button
               size="lg"
               variant="outline"
               className="gap-2 text-base px-8 w-full sm:w-auto h-12"
             >
-              <ExternalLink className="w-4 h-4" aria-hidden="true" />
-              View Docs
+              <Mountain className="w-5 h-5" aria-hidden="true" />
+              Try Site Survey
             </Button>
-          </a>
+          </Link>
         </div>
       </div>
     </aside>
