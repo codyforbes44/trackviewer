@@ -17,6 +17,7 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import MapView from "./pages/MapView";
 import TrackView from "./pages/TrackView";
+import SiteSurvey from "./pages/SiteSurvey";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -59,6 +60,11 @@ const App = () => (
                     <Route path="/map/:id" element={
                       <ProtectedRoute>
                         <MapView />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/site-survey" element={
+                      <ProtectedRoute>
+                        <SiteSurvey />
                       </ProtectedRoute>
                     } />
                     <Route path="/track/:id" element={<TrackView />} />
