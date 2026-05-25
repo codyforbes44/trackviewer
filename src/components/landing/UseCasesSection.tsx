@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Truck, Users, Briefcase, Code, Check } from "lucide-react";
+import { Truck, Users, Briefcase, Code, Check, HardHat, Home } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const cases = [
@@ -40,6 +40,32 @@ const cases = [
       "Multi-tracker dashboard view",
       "Live status per team member",
       "Works on any device",
+    ],
+  },
+  {
+    id: "construction",
+    label: "Construction",
+    icon: HardHat,
+    heading: "Scope Job Sites Before You Roll a Truck",
+    description:
+      "Drop into any address with 3D terrain, slope and aspect — assess grading, drainage and sun exposure from the office before mobilizing crews.",
+    benefits: [
+      "Slope, aspect and elevation readouts",
+      "Contour lines and hillshade overlays",
+      "Sun path & shadow analysis",
+    ],
+  },
+  {
+    id: "realestate",
+    label: "Real Estate",
+    icon: Home,
+    heading: "Sell the Land, Not Just the Lot",
+    description:
+      "Show buyers a 3D view of any parcel — orientation, terrain, sunlight and surrounding context, with no specialty software.",
+    benefits: [
+      "Address search with autocomplete",
+      "Satellite, terrain and street styles",
+      "Shareable, mobile-friendly views",
     ],
   },
   {
