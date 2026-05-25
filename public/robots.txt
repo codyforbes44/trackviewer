@@ -2,12 +2,16 @@
 User-agent: *
 Allow: /
 
-# Disallow dynamic tracking pages from indexing (unique per user)
+# Private / per-user routes (no SEO value, never index)
 Disallow: /map/
 Disallow: /track/
+Disallow: /dashboard
+Disallow: /site-survey
+Disallow: /reset-password
+Disallow: /subscription/
 
-# Sitemap location
+# Sitemap
 Sitemap: https://mapme.live/sitemap.xml
 
-# Crawl delay (optional, helps prevent server overload)
+# Crawl delay
 Crawl-delay: 1

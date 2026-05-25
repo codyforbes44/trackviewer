@@ -12,9 +12,9 @@ interface SEOProps {
 }
 
 const SEO = ({
-  title = "MᴀᴘMᴇ.Lɪᴠᴇ - Real-Time Location Tracking & GPS Monitoring",
-  description = "Generate unique tracking links and monitor device locations in real-time. Free location tracking with live map visualization, secure sharing, and terminal integration. Perfect for device monitoring and location-based applications.",
-  keywords = "location tracking, GPS tracking, real-time tracking, location sharing, device tracking, map tracking, geo tracking, live location, tracking link, location monitor",
+  title = "MᴀᴘMᴇ.Lɪᴠᴇ — Real-Time GPS Tracking & 3D Site Survey",
+  description = "Real-time GPS tracking links plus a best-in-class 3D site survey: terrain, elevation, slope, contour lines, sun path, and live weather for any address.",
+  keywords = "GPS tracking, real-time location tracking, tracking link, site survey, terrain map, elevation map, contour lines, slope analysis, sun path, hillshade, 3D map, Mapbox",
   canonical = "https://mapme.live",
   ogType = "website",
   ogImage = "https://storage.googleapis.com/gpt-engineer-file-uploads/iC4WGuGth9hul7BjQ42FtWwEb9C3/social-images/social-1773081056490-01a7b120-9dbd-4aa4-9a7f-1ff045a47dbf.webp",
