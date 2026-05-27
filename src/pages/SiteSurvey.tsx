@@ -338,20 +338,35 @@ const SiteSurvey = () => {
   useEffect(() => {
     if (!mapboxToken || !mapContainer.current || map.current) return;
     mapboxgl.accessToken = mapboxToken;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const m = new mapboxgl.Map({
       container: mapContainer.current,
-      style: `mapbox://styles/mapbox/${styleId}`,
+      style: styleMeta(styleId).url,
       center: [-98.5795, 39.8283],
       zoom: 3.5,
       pitch: 50,
       bearing: 0,
       antialias: true,
+      pixelRatio: dpr,
+      maxZoom: 22,
+      projection: 'globe' as any,
+      respectPrefersReducedMotion: true,
+      attributionControl: false,
     });
+    m.addControl(new mapboxgl.AttributionControl({ compact: true }), 'bottom-right');
     m.addControl(new mapboxgl.NavigationControl({ visualizePitch: true }), 'top-right');
     m.addControl(new mapboxgl.ScaleControl({ unit: 'metric' }), 'bottom-left');
     m.addControl(new mapboxgl.FullscreenControl(), 'top-right');
     m.addControl(new mapboxgl.GeolocateControl({ positionOptions: { enableHighAccuracy: true }, trackUserLocation: false }), 'top-right');
-    m.on('style.load', () => applyLayers());
+    m.on('style.load', () => {
+      applyLayers();
+      // Restore marker + recompute after style swap
+      const last = lastSiteRef.current;
+      if (last) {
+        if (markerRef.current) markerRef.current.remove();
+        markerRef.current = new mapboxgl.Marker({ color: '#e85d3a' }).setLngLat([last.lng, last.lat]).addTo(m);
+      }
+    });
     map.current = m;
     return () => { m.remove(); map.current = null; };
   }, [mapboxToken]); // eslint-disable-line
@@ -362,7 +377,7 @@ const SiteSurvey = () => {
   // Style change
   useEffect(() => {
     if (!map.current) return;
-    map.current.setStyle(`mapbox://styles/mapbox/${styleId}`);
+    map.current.setStyle(styleMeta(styleId).url, { diff: true });
   }, [styleId]);
 
   // Geocoding search (debounced)
