@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { Search, Loader2, MapPin, Mountain, Compass, Sun, Ruler, Layers, Crosshair, Building2, Cloud, AlertCircle, Copy } from 'lucide-react';
+import { Search, Loader2, MapPin, Mountain, Compass, Sun, Ruler, Layers, Crosshair, Building2, Cloud, AlertCircle, Copy, X, ChevronUp, ChevronDown } from 'lucide-react';
 import Layout from '@/components/Layout';
 import SEO from '@/components/SEO';
 import { Button } from '@/components/ui/button';
@@ -12,9 +12,12 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useTheme } from '@/hooks/useTheme';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface Suggestion {
   id: string;
@@ -38,14 +41,15 @@ interface SiteInfo {
 }
 
 const MAP_STYLES = [
-  { id: 'satellite-streets-v12', label: 'Satellite', icon: '🛰️' },
-  { id: 'outdoors-v12', label: 'Terrain', icon: '⛰️' },
-  { id: 'streets-v12', label: 'Streets', icon: '🗺️' },
-  { id: 'light-v11', label: 'Light', icon: '☀️' },
-  { id: 'dark-v11', label: 'Dark', icon: '🌙' },
+  { id: 'standard-satellite', label: 'Satellite', icon: '🛰️', url: 'mapbox://styles/mapbox/standard-satellite', standard: true },
+  { id: 'standard', label: 'Standard', icon: '🏙️', url: 'mapbox://styles/mapbox/standard', standard: true },
+  { id: 'outdoors-v12', label: 'Topo', icon: '⛰️', url: 'mapbox://styles/mapbox/outdoors-v12', standard: false },
+  { id: 'streets-v12', label: 'Streets', icon: '🗺️', url: 'mapbox://styles/mapbox/streets-v12', standard: false },
+  { id: 'dark-v11', label: 'Dark', icon: '🌙', url: 'mapbox://styles/mapbox/dark-v11', standard: false },
 ] as const;
 
 type StyleId = typeof MAP_STYLES[number]['id'];
+const styleMeta = (id: StyleId) => MAP_STYLES.find((s) => s.id === id)!;
 
 // ── Solar position (NOAA simplified) ──
 function solarPosition(date: Date, lat: number, lng: number) {
