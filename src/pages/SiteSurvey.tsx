@@ -400,27 +400,39 @@ const SiteSurvey = () => {
   const computeSiteData = useCallback(async (lng: number, lat: number, place: Suggestion | null) => {
     const m = map.current;
     if (!m) return;
+    lastSiteRef.current = { lng, lat, place };
+    setSampling(true);
 
-    // Wait for terrain to be queryable
+    // Poll terrain queries until DEM tiles are decoded (≤ 2s).
     const queryEl = (x: number, y: number) => {
       try { return m.queryTerrainElevation([x, y], { exaggerated: false }); } catch { return null; }
     };
-    const elevation = queryEl(lng, lat);
-
-    // Slope/aspect from 4 neighbors (~30m)
     const dLat = 0.0003;
     const dLng = 0.0003 / Math.cos(lat * Math.PI / 180);
-    const n = queryEl(lng, lat + dLat);
-    const s = queryEl(lng, lat - dLat);
-    const e = queryEl(lng + dLng, lat);
-    const w = queryEl(lng - dLng, lat);
+    const sample = () => {
+      const elev = queryEl(lng, lat);
+      const n = queryEl(lng, lat + dLat);
+      const s = queryEl(lng, lat - dLat);
+      const e = queryEl(lng + dLng, lat);
+      const w = queryEl(lng - dLng, lat);
+      return { elev, n, s, e, w };
+    };
+    let r = sample();
+    const start = Date.now();
+    while ((r.elev == null || r.n == null || r.s == null || r.e == null || r.w == null) && Date.now() - start < 2000) {
+      await new Promise((res) => setTimeout(res, 120));
+      r = sample();
+    }
+    const elevation = r.elev;
     let slope: number | null = null;
     let aspect: number | null = null;
-    if (n != null && s != null && e != null && w != null) {
-      const dzdx = (e - w) / (2 * 33);
-      const dzdy = (n - s) / (2 * 33);
+    if (r.n != null && r.s != null && r.e != null && r.w != null) {
+      // ~33m per 0.0003° latitude
+      const dzdx = (r.e - r.w) / (2 * 33);
+      const dzdy = (r.n - r.s) / (2 * 33);
       slope = Math.atan(Math.sqrt(dzdx * dzdx + dzdy * dzdy)) * (180 / Math.PI);
-      aspect = (Math.atan2(dzdy, -dzdx) * 180 / Math.PI + 360) % 360;
+      // Aspect = compass bearing of downhill direction (0°=N, clockwise).
+      aspect = (Math.atan2(-dzdx, -dzdy) * 180 / Math.PI + 360) % 360;
     }
 
     // Reverse geocode if no place provided
@@ -454,6 +466,10 @@ const SiteSurvey = () => {
       utm: toUTM(lat, lng),
       country, region, postcode,
     });
+    setSampling(false);
+    if (elevation == null) {
+      toast({ title: 'Terrain unavailable', description: 'No DEM coverage at this location or zoom out further.', variant: 'destructive' });
+    }
 
     // Weather (Open-Meteo, free, no key)
     try {
