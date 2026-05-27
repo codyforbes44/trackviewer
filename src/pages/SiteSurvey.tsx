@@ -680,7 +680,7 @@ const SiteSurvey = () => {
         noindex
       />
       <Layout>
-        <main aria-label="Site Survey" className="relative w-full h-[calc(100dvh-4rem)] overflow-hidden">
+        <main aria-label="Site Survey" className="relative w-full h-[calc(100dvh-9rem)] md:h-[calc(100dvh-4rem)] overflow-hidden">
           {/* Map area */}
           <div className="absolute inset-0">
             {tokenError ? (
@@ -755,11 +755,8 @@ const SiteSurvey = () => {
 
           {/* Desktop side panel */}
           {!isMobile && (
-            <div
-              className="absolute top-0 right-0 z-10 w-[360px] h-full bg-card/95 backdrop-blur-md border-l border-border/50 shadow-elevated overflow-y-auto"
-              style={{ paddingTop: '4rem' }}
-            >
-              <div className="p-4 space-y-4">
+            <div className="absolute top-0 right-0 z-10 w-[360px] h-full bg-card/95 backdrop-blur-md border-l border-border/50 shadow-elevated overflow-y-auto">
+              <div className="p-4 pt-16 space-y-4">
                 <Card>
                   <CardHeader className="pb-3">
                     <CardTitle className="text-sm flex items-center gap-2"><Layers className="w-4 h-4" /> Layers</CardTitle>
