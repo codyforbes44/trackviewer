@@ -338,7 +338,6 @@ const SiteSurvey = () => {
   useEffect(() => {
     if (!mapboxToken || !mapContainer.current || map.current) return;
     mapboxgl.accessToken = mapboxToken;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const m = new mapboxgl.Map({
       container: mapContainer.current,
       style: styleMeta(styleId).url,
@@ -347,12 +346,11 @@ const SiteSurvey = () => {
       pitch: 50,
       bearing: 0,
       antialias: true,
-      pixelRatio: dpr,
       maxZoom: 22,
       projection: 'globe' as any,
       respectPrefersReducedMotion: true,
       attributionControl: false,
-    });
+    } as any);
     m.addControl(new mapboxgl.AttributionControl({ compact: true }), 'bottom-right');
     m.addControl(new mapboxgl.NavigationControl({ visualizePitch: true }), 'top-right');
     m.addControl(new mapboxgl.ScaleControl({ unit: 'metric' }), 'bottom-left');
@@ -377,7 +375,7 @@ const SiteSurvey = () => {
   // Style change
   useEffect(() => {
     if (!map.current) return;
-    map.current.setStyle(styleMeta(styleId).url, { diff: true });
+    map.current.setStyle(styleMeta(styleId).url, { diff: true } as any);
   }, [styleId]);
 
   // Geocoding search (debounced)
