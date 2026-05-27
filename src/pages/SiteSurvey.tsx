@@ -191,6 +191,8 @@ const SiteSurvey = () => {
   const applyLayers = useCallback(() => {
     const m = map.current;
     if (!m || !m.isStyleLoaded()) return;
+    const meta = styleMeta(styleId);
+    const isStandard = meta.standard;
 
     // DEM source
     if (!m.getSource('mapbox-dem')) {
@@ -206,18 +208,26 @@ const SiteSurvey = () => {
     // Hillshade
     if (hillshade) {
       if (!m.getLayer('hillshading')) {
-        m.addLayer({
-          id: 'hillshading',
-          source: 'mapbox-dem',
-          type: 'hillshade',
-          paint: { 'hillshade-exaggeration': 0.6 },
-        });
+        try {
+          const layerSpec: any = {
+            id: 'hillshading',
+            source: 'mapbox-dem',
+            type: 'hillshade',
+            paint: { 'hillshade-exaggeration': 0.6 },
+          };
+          if (isStandard) layerSpec.slot = 'middle';
+          m.addLayer(layerSpec);
+        } catch { /* noop */ }
       }
     } else if (m.getLayer('hillshading')) {
       m.removeLayer('hillshading');
     }
 
     // Contours
+    const darkBase = isStandard ? styleId === 'standard-satellite' : (styleId === 'dark-v11');
+    const contourLine = darkBase ? '#ffd27a' : '#7a3a18';
+    const contourHalo = darkBase ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.9)';
+    const contourText = darkBase ? '#fff4d6' : '#3a1a08';
     if (contours) {
       if (!m.getSource('contours')) {
         m.addSource('contours', {
@@ -226,82 +236,103 @@ const SiteSurvey = () => {
         });
       }
       if (!m.getLayer('contour-lines')) {
-        m.addLayer({
-          id: 'contour-lines',
-          type: 'line',
-          source: 'contours',
-          'source-layer': 'contour',
-          paint: {
-            'line-color': '#a0522d',
-            'line-width': ['case', ['==', ['%', ['get', 'ele'], 100], 0], 1.2, 0.5],
-            'line-opacity': 0.7,
-          },
-        });
+        try {
+          const spec: any = {
+            id: 'contour-lines',
+            type: 'line',
+            source: 'contours',
+            'source-layer': 'contour',
+            paint: {
+              'line-color': contourLine,
+              'line-width': ['case', ['==', ['%', ['get', 'ele'], 100], 0], 1.3, 0.6],
+              'line-opacity': 0.8,
+            },
+          };
+          if (isStandard) spec.slot = 'middle';
+          m.addLayer(spec);
+        } catch { /* noop */ }
+      } else {
+        m.setPaintProperty('contour-lines', 'line-color', contourLine);
       }
       if (!m.getLayer('contour-labels')) {
-        m.addLayer({
-          id: 'contour-labels',
-          type: 'symbol',
-          source: 'contours',
-          'source-layer': 'contour',
-          filter: ['==', ['%', ['get', 'ele'], 100], 0],
-          layout: {
-            'symbol-placement': 'line',
-            'text-field': ['concat', ['to-string', ['get', 'ele']], ' m'],
-            'text-font': ['DIN Pro Medium', 'Arial Unicode MS Regular'],
-            'text-size': 10,
-          },
-          paint: {
-            'text-color': '#5c2018',
-            'text-halo-color': '#fff',
-            'text-halo-width': 1,
-          },
-        });
+        try {
+          const spec: any = {
+            id: 'contour-labels',
+            type: 'symbol',
+            source: 'contours',
+            'source-layer': 'contour',
+            filter: ['==', ['%', ['get', 'ele'], 100], 0],
+            layout: {
+              'symbol-placement': 'line',
+              'text-field': ['concat', ['to-string', ['get', 'ele']], ' m'],
+              'text-font': isStandard
+                ? ['Open Sans Semibold', 'Arial Unicode MS Regular']
+                : ['DIN Pro Medium', 'Arial Unicode MS Regular'],
+              'text-size': 11,
+            },
+            paint: {
+              'text-color': contourText,
+              'text-halo-color': contourHalo,
+              'text-halo-width': 1.2,
+            },
+          };
+          if (isStandard) spec.slot = 'top';
+          m.addLayer(spec);
+        } catch { /* noop */ }
+      } else {
+        m.setPaintProperty('contour-labels', 'text-color', contourText);
+        m.setPaintProperty('contour-labels', 'text-halo-color', contourHalo);
       }
     } else {
       ['contour-labels', 'contour-lines'].forEach((l) => m.getLayer(l) && m.removeLayer(l));
     }
 
     // 3D buildings
-    const labelLayer = m.getStyle().layers?.find((l: any) => l.type === 'symbol' && l.layout?.['text-field'])?.id;
-    if (buildings3D) {
-      if (!m.getLayer('3d-buildings')) {
+    if (isStandard) {
+      // Standard styles ship with 3D objects; toggle via config.
+      try { (m as any).setConfigProperty('basemap', 'show3dObjects', buildings3D); } catch { /* noop */ }
+      if (m.getLayer('3d-buildings')) m.removeLayer('3d-buildings');
+    } else {
+      const labelLayer = m.getStyle().layers?.find((l: any) => l.type === 'symbol' && l.layout?.['text-field'])?.id;
+      if (buildings3D) {
+        if (!m.getLayer('3d-buildings')) {
+          try {
+            m.addLayer({
+              id: '3d-buildings',
+              source: 'composite',
+              'source-layer': 'building',
+              filter: ['==', 'extrude', 'true'],
+              type: 'fill-extrusion',
+              minzoom: 14,
+              paint: {
+                'fill-extrusion-color': '#aaa',
+                'fill-extrusion-height': ['interpolate', ['linear'], ['zoom'], 14, 0, 15.05, ['get', 'height']],
+                'fill-extrusion-base': ['interpolate', ['linear'], ['zoom'], 14, 0, 15.05, ['get', 'min_height']],
+                'fill-extrusion-opacity': 0.78,
+              },
+            }, labelLayer);
+          } catch { /* noop */ }
+        }
+      } else if (m.getLayer('3d-buildings')) {
+        m.removeLayer('3d-buildings');
+      }
+
+      // Sky (classic styles only — Standard provides its own atmosphere)
+      if (!m.getLayer('sky')) {
         try {
           m.addLayer({
-            id: '3d-buildings',
-            source: 'composite',
-            'source-layer': 'building',
-            filter: ['==', 'extrude', 'true'],
-            type: 'fill-extrusion',
-            minzoom: 14,
+            id: 'sky',
+            type: 'sky',
             paint: {
-              'fill-extrusion-color': '#aaa',
-              'fill-extrusion-height': ['interpolate', ['linear'], ['zoom'], 14, 0, 15.05, ['get', 'height']],
-              'fill-extrusion-base': ['interpolate', ['linear'], ['zoom'], 14, 0, 15.05, ['get', 'min_height']],
-              'fill-extrusion-opacity': 0.75,
+              'sky-type': 'atmosphere',
+              'sky-atmosphere-sun': [0, 0],
+              'sky-atmosphere-sun-intensity': 15,
             },
-          }, labelLayer);
-        } catch { /* style w/o building layer */ }
+          });
+        } catch { /* noop */ }
       }
-    } else if (m.getLayer('3d-buildings')) {
-      m.removeLayer('3d-buildings');
     }
-
-    // Sky
-    if (!m.getLayer('sky')) {
-      try {
-        m.addLayer({
-          id: 'sky',
-          type: 'sky',
-          paint: {
-            'sky-type': 'atmosphere',
-            'sky-atmosphere-sun': [0, 0],
-            'sky-atmosphere-sun-intensity': 15,
-          },
-        });
-      } catch { /* noop */ }
-    }
-  }, [terrain3D, hillshade, contours, buildings3D]);
+  }, [styleId, terrain3D, hillshade, contours, buildings3D]);
 
   // Init map
   useEffect(() => {
