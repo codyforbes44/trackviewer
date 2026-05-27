@@ -482,7 +482,12 @@ const SiteSurvey = () => {
   const flyToLocation = useCallback((lng: number, lat: number, place: Suggestion | null) => {
     const m = map.current;
     if (!m) return;
-    m.flyTo({ center: [lng, lat], zoom: 17, pitch: 60, bearing: -20, speed: 1.2, essential: true });
+    const reduce = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) {
+      m.jumpTo({ center: [lng, lat], zoom: 17, pitch: 60, bearing: -20 });
+    } else {
+      m.flyTo({ center: [lng, lat], zoom: 17, pitch: 60, bearing: -20, speed: 1.2, essential: true });
+    }
     if (markerRef.current) markerRef.current.remove();
     markerRef.current = new mapboxgl.Marker({ color: '#e85d3a' }).setLngLat([lng, lat]).addTo(m);
 
@@ -491,6 +496,7 @@ const SiteSurvey = () => {
       m.off('idle', onIdle);
     };
     m.on('idle', onIdle);
+    setSheetExpanded(true);
   }, [computeSiteData]);
 
   // Click on map = drop pin
@@ -514,8 +520,14 @@ const SiteSurvey = () => {
   // Sync sky/sun
   useEffect(() => {
     if (!map.current || !sun) return;
-    try { map.current.setPaintProperty('sky', 'sky-atmosphere-sun', [sun.azimuth, Math.max(0, 90 - sun.altitude)]); } catch { /* noop */ }
-  }, [sun]);
+    const meta = styleMeta(styleId);
+    if (meta.standard) {
+      const preset = sun.altitude > 10 ? 'day' : sun.altitude > -6 ? 'dusk' : 'night';
+      try { (map.current as any).setConfigProperty('basemap', 'lightPreset', preset); } catch { /* noop */ }
+    } else if (map.current.getLayer('sky')) {
+      try { map.current.setPaintProperty('sky', 'sky-atmosphere-sun', [sun.azimuth, Math.max(0, 90 - sun.altitude)]); } catch { /* noop */ }
+    }
+  }, [sun, styleId]);
 
   const copy = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
