@@ -153,11 +153,15 @@ const SiteSurvey = () => {
   const [searching, setSearching] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
-  const [styleId, setStyleId] = useState<StyleId>('satellite-streets-v12');
+  const [styleId, setStyleId] = useState<StyleId>('standard-satellite');
   const [terrain3D, setTerrain3D] = useState(true);
   const [contours, setContours] = useState(true);
   const [hillshade, setHillshade] = useState(true);
   const [buildings3D, setBuildings3D] = useState(true);
+  const [sampling, setSampling] = useState(false);
+  const [sheetExpanded, setSheetExpanded] = useState(false);
+  const isMobile = useIsMobile();
+  const lastSiteRef = useRef<{ lng: number; lat: number; place: Suggestion | null } | null>(null);
 
   const [info, setInfo] = useState<SiteInfo | null>(null);
   const [weather, setWeather] = useState<{ temp: number; wind: number; code: number } | null>(null);
